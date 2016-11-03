@@ -5,18 +5,27 @@ public interface IUsable {
 	void Use();
 }
 
+//offset = transform.position - inv.position;
+//transform.position = inventory.position + offset;
+
 [RequireComponent(typeof(Rigidbody))]
 public class VR_Object : MonoBehaviour {
 
 	Rigidbody rb;
 	Transform contTransform;
+	Transform inventory;
+
+	Quaternion rotOnStore;
+
 	bool holding;
+	bool stored;
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
 	}
 
 	public void Hold (Transform cont) {
+		stored = false;
 		holding = true;
 		rb.isKinematic = true;
 		contTransform = cont;
@@ -30,6 +39,13 @@ public class VR_Object : MonoBehaviour {
 		contTransform = null;
 	}
 
+	public void Store (Transform inv) {
+		stored = true;
+		rb.isKinematic = true;
+		inventory = inv;
+		rotOnStore = inventory.rotation;
+	}
+
 	public Transform GetCont () {
 		return contTransform;
 	}
@@ -38,6 +54,11 @@ public class VR_Object : MonoBehaviour {
 		if (holding) {
 			transform.position = contTransform.position;
 			transform.rotation = contTransform.rotation;
+		}
+
+		if (stored) {
+			transform.position = inventory.position;
+			transform.rotation = Quaternion.Inverse(rotOnStore) * inventory.rotation;
 		}
 	}
 }

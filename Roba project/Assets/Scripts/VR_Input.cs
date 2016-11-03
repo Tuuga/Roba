@@ -14,7 +14,9 @@ public class VR_Input : MonoBehaviour {
 	SteamVR_Controller.Device controller;
 
 	VR_Object currentInUse;
-	public List<VR_Object> couldUse = new List<VR_Object>();
+	List<VR_Object> couldUse = new List<VR_Object>();
+
+	public Transform inventorySlot;
 
 	void Start () {
 		trackedObj = GetComponent<SteamVR_TrackedObject>();
@@ -26,11 +28,13 @@ public class VR_Input : MonoBehaviour {
 		var closestObj = ClosestCouldUse();
 
 		// Grip input down
+		// Sets currentlyInUse and holds it
 		if (controller.GetPressDown(grip) && closestObj != null) {
 			SetCurrentlyInUse(closestObj);
 			closestObj.Hold(transform);
 		}
 		// Grip input up
+		// Drops currentlyInUse
 		if (controller.GetPressUp(grip) && currentInUse != null) {
 			var vel = transform.parent.TransformDirection(controller.velocity);
 			var angVel = transform.parent.TransformDirection(controller.angularVelocity);
@@ -40,8 +44,11 @@ public class VR_Input : MonoBehaviour {
 		}
 
 		// Touch pad input down
-		if (controller.GetPressDown(touchPad)) {
-			
+		// Stores currentlyInUse
+		if (controller.GetPressDown(touchPad) && currentInUse != null) {
+			currentInUse.Drop(Vector3.zero, Vector3.zero);
+			currentInUse.Store(inventorySlot);
+			SetCurrentlyInUse(null);
 		}
 		// Touch pad input up
 		if (controller.GetPressUp(touchPad)) {
@@ -49,6 +56,7 @@ public class VR_Input : MonoBehaviour {
 		}
 
 		// Trigger input down
+		// Use currentlyInUse if usable
 		if (controller.GetPressDown(trigger) && currentInUse != null) {
 			var usable = currentInUse.GetComponent<IUsable>();
 			if (usable != null) { usable.Use(); }
@@ -106,7 +114,7 @@ public class VR_Input : MonoBehaviour {
 	void OnTriggerEnter (Collider c) {
 		var obj = FindObjInHierarchy(c);
 
-		if (obj != null) {
+		if (obj != null && !couldUse.Contains(obj)) {
 			couldUse.Add(obj);
 		}
 	}
