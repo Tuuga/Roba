@@ -32,11 +32,8 @@ public class ShipController : MonoBehaviour {
 		var torque = Quaternion.Euler(pitch, jaw, roll);
 
 		var thrust = new Vector3();
-		if (RightStick.GetTriggerAxis().x >= 1) {
-			thrust = transform.forward * (RightStick.GetTriggerAxis().x - LeftStick.GetTriggerAxis().x) * thrustForce * Time.deltaTime * 2;
-		} else {
-			thrust = transform.forward * (RightStick.GetTriggerAxis().x - LeftStick.GetTriggerAxis().x) * thrustForce * Time.deltaTime;
-		}
+
+		thrust = transform.forward * (LeftStick.GetThrust()) * thrustForce * Time.deltaTime;
 		var hover = transform.up * LeftStick.GetHover() * hoverForce * Time.deltaTime;
 
 		rb.AddForce(thrust, ForceMode.Force);
