@@ -1,45 +1,45 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿//using UnityEngine;
+//using System.Collections;
 
-public class ShipController : MonoBehaviour {
+//public class ShipController : MonoBehaviour {
 
-	public float pitchSpeed;
-	public float jawSpeed;
-	public float rollSpeed;
+//	public float pitchSpeed;
+//	public float jawSpeed;
+//	public float rollSpeed;
 
-	public float thrustForce;
-	public float hoverForce;
+//	public float thrustForce;
+//	public float hoverForce;
 
-	bool inAir;
+//	bool inAir;
 
-	Rigidbody rb;
+//	Rigidbody rb;
 
-	void Start () {
-		rb = GetComponent<Rigidbody>();
-	}
+//	void Start () {
+//		rb = GetComponent<Rigidbody>();
+//	}
 
-	void Update () {
+//	void Update () {
 
-		if (!RightStick.GetMenuPressed()) { return; }
+//		if (!RightStick.GetMenuPressed()) { return; }
 
-		var pitchRoll = RightStick.GetPitchRoll();
+//		var pitchRoll = RightStick.GetPitchRoll();
 
-		var pitch = -pitchRoll.y * pitchSpeed * Time.deltaTime;
-		var roll = -pitchRoll.x * rollSpeed * Time.deltaTime;
+//		var pitch = -pitchRoll.y * pitchSpeed * Time.deltaTime;
+//		var roll = -pitchRoll.x * rollSpeed * Time.deltaTime;
 
-		var jaw = RightStick.GetJaw() * jawSpeed * Time.deltaTime;
+//		var jaw = RightStick.GetJaw() * jawSpeed * Time.deltaTime;
 
-		var torque = Quaternion.Euler(pitch, jaw, roll);
+//		var torque = Quaternion.Euler(pitch, jaw, roll);
 
-		var thrust = new Vector3();
+//		var thrust = new Vector3();
 
-		thrust = transform.forward * (LeftStick.GetThrust()) * thrustForce * Time.deltaTime;
-		var hover = transform.up * LeftStick.GetHover() * hoverForce * Time.deltaTime;
+//		thrust = transform.forward * (LeftStick.GetThrust()) * thrustForce * Time.deltaTime;
+//		var hover = transform.up * LeftStick.GetHover() * hoverForce * Time.deltaTime;
 
-		rb.AddForce(thrust, ForceMode.Force);
-		rb.AddForce(hover, ForceMode.Force);
+//		rb.AddForce(thrust, ForceMode.Force);
+//		rb.AddForce(hover, ForceMode.Force);
 
-		transform.rotation *= torque;
-		//transform.position += thrusth;
-	}
-}
+//		transform.rotation *= torque;
+//		//transform.position += thrusth;
+//	}
+//}
